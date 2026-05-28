@@ -13,19 +13,14 @@
  
 ## What This Project Does
  
-This project repurposes the mainboard, brushless hub motors, and battery from a cheap off-the-shelf hoverboard into a fully controllable **autonomous robot platform**.
+This project repurposes the mainboard, brushless hub motors, and battery from a cheap off-the-shelf hoverboard into a fully controllable **robot platform**.
  
-The hoverboard hardware is surprisingly capable — the motors are powerful, the battery is large, and the mainboard already handles low-level motor driving. This firmware unlocks that hardware by replacing the original software with something you fully control.
+The hoverboard hardware is surprisingly capable - the motors are powerful, the battery is large, and the mainboard already handles low-level motor driving. This firmware unlocks that hardware by replacing the original software with something you fully control.
  
 On top of the base firmware, this build adds two extra layers:
  
 1. **Arduino Uno + Motor Controller** — The Arduino acts as the brain, sending speed and direction commands to the hoverboard mainboard over UART. A separate motor controller board sits between the Arduino and the hoverboard, translating high-level commands into the PWM/UART signals the mainboard expects. This makes it easy to swap out control logic or add sensors without touching the hoverboard firmware itself.
 2. **ESP32 Bluetooth Bridge** — An ESP32 module connects to the Arduino and exposes a Bluetooth interface. A companion mobile app connects to the ESP32 wirelessly and sends drive commands (forward, backward, turn, speed) in real time. The ESP32 receives these commands and forwards them to the Arduino over its serial connection.
-The full communication chain looks like this:
- 
-```
-Mobile App  ──(Serial Bluetooth Terminal)──►  ESP32  ──(Serial/UART)──►  Arduino Uno  ──(UART)──►  Hoverboard Mainboard  ──►  Motors
-```
  
 ---
  
@@ -103,7 +98,7 @@ The Arduino parses these commands and maps them to the left/right motor speed va
  
 ## Mobile App
  
-The companion app connects to the ESP32 over Bluetooth and provides a simple interface for driving the robot.
+The companion app **Serial Bluetooth Terminal** connects to the ESP32 over Bluetooth and provides a simple interface for driving the robot.
  
 ![Serial Bluetooth Terminal app](Images/Serial%20Bluetooth%20Terminal.png)
 ---
@@ -133,7 +128,7 @@ Connect GND, SWDIO, and SWCLK to your ST-Link programmer. **Do not power the mai
  
 Hold the power button (or jumper the power pins) while flashing, otherwise the STM32 may cut power to itself mid-flash.
  
-### Unlock the Flash (first time only)
+### Unlock the Flash
  
 ```bash
 openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg \
@@ -166,8 +161,6 @@ openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg \
 ---
  
  
----
- 
 ## Configuration
  
 Edit `Inc/config.h` to match your build:
@@ -184,7 +177,6 @@ Edit `Inc/config.h` to match your build:
 - [UART control example (Arduino)](https://github.com/p-h-a-i-l/hoverboard-firmware-hack) — Arduino UART communication reference
 - [BiPropellant fork](https://github.com/bipropellant) — focuses on reliable machine control
 - [Gen2 split mainboard hack](https://github.com/flo199213/Hoverboard-Firmware-Hack-Gen2) — for boards with separate left/right mainboards
-- [Breakout boards](https://github.com/Jan--Henrik/hoverboard-breakout) — PCBs for cleaner mainboard connections
 - [Project talk video (~40 min)](https://media.ccc.de/v/gpn18-95-howto-moving-objects) — overview of hoverboard hacking
 ---
  
